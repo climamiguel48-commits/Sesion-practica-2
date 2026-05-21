@@ -23,7 +23,7 @@ format:
 
 ------------------------------------------------------------------------
 
-## Consecuencias de no controlar calidad
+## Consecuencias de no controlar calidad 
 
 -   Estadísticas sesgadas (medias, máximos, tendencias)
 
