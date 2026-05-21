@@ -1,0 +1,135 @@
+[
+  {
+    "objectID": "index.html#por-qué-control-de-calidad",
+    "href": "index.html#por-qué-control-de-calidad",
+    "title": "Control de calidad de datos meteorológicos",
+    "section": "¿Por qué control de calidad?",
+    "text": "¿Por qué control de calidad?\n\nLos datos no son perfectos\nPrescencia de errores de medición, transmisión o procesamiento\nDatos faltantes o valores extremos no realistas"
+  },
+  {
+    "objectID": "index.html#consecuencias-de-no-controlar-calidad",
+    "href": "index.html#consecuencias-de-no-controlar-calidad",
+    "title": "Control de calidad de datos meteorológicos",
+    "section": "Consecuencias de no controlar calidad",
+    "text": "Consecuencias de no controlar calidad\n\nEstadísticas sesgadas (medias, máximos, tendencias)\nGráficos engañosos\nDecisiones agrícolas incorrectas"
+  },
+  {
+    "objectID": "index.html#objetivo-de-la-clase",
+    "href": "index.html#objetivo-de-la-clase",
+    "title": "Control de calidad de datos meteorológicos",
+    "section": "Objetivo de la clase",
+    "text": "Objetivo de la clase\nAprender a:\n\nIdentificar valores faltantes en series climáticas\nVerificar rangos plausibles por variable\nDetectar incoherencias entre variables\nIdentificar outliers usando método IQR\nGenerar un dataset limpio para análisis posteriores"
+  },
+  {
+    "objectID": "index.html#datos-de-partida",
+    "href": "index.html#datos-de-partida",
+    "title": "Control de calidad de datos meteorológicos",
+    "section": "Datos de partida",
+    "text": "Datos de partida\nUsaremos los datos descargados en la clase anterior:\n# Cargar datos desde el archivo guardado\ndatos &lt;- read.xlsx(\"datos_limpios.xlsx\")\nDebemos garantizar que el archivo generado en la sesión práctica anterior se encuentre en la carpeta del directorio de trabajo."
+  },
+  {
+    "objectID": "index.html#variables-disponibles",
+    "href": "index.html#variables-disponibles",
+    "title": "Control de calidad de datos meteorológicos",
+    "section": "Variables disponibles",
+    "text": "Variables disponibles\n\nfecha: Día del año\nT_media, T_max, T_min: Temperaturas (°C)\nPrecipitacion: Lluvia (mm/día)\nHR: Humedad relativa (%)\nViento: Velocidad del viento (m/s)\nRadiacion: Radiación solar (W/m²)"
+  },
+  {
+    "objectID": "index.html#vemos-la-estructura-de-los-datos",
+    "href": "index.html#vemos-la-estructura-de-los-datos",
+    "title": "Control de calidad de datos meteorológicos",
+    "section": "Vemos la estructura de los datos",
+    "text": "Vemos la estructura de los datos\n# Ver estructura de los datos\nhead(datos)\nsummary(datos)"
+  },
+  {
+    "objectID": "index.html#verificamos-los-valores-faltantes",
+    "href": "index.html#verificamos-los-valores-faltantes",
+    "title": "Control de calidad de datos meteorológicos",
+    "section": "Verificamos los valores faltantes",
+    "text": "Verificamos los valores faltantes\n# Contar cuántos NA hay por variable\nsum(is.na(datos$T_media))\nsum(is.na(datos$T_max))\nsum(is.na(datos$T_min))\nsum(is.na(datos$Precipitacion))\nsum(is.na(datos$HR))\nsum(is.na(datos$Viento))\nsum(is.na(datos$Radiacion))"
+  },
+  {
+    "objectID": "index.html#verificamos-los-rangos-plausibles",
+    "href": "index.html#verificamos-los-rangos-plausibles",
+    "title": "Control de calidad de datos meteorológicos",
+    "section": "Verificamos los rangos plausibles",
+    "text": "Verificamos los rangos plausibles\nCada variable tiene límites físicos:\n\n\n\n\nVariable\n\n\nRango\n\n\nUnidad\n\n\n\n\n\n\n🌡️ T_media\n\n\n15 a 35\n\n\n°C\n\n\n\n\n🔥 T_max\n\n\n20 a 45\n\n\n°C\n\n\n\n\n❄️ T_min\n\n\n10 a 28\n\n\n°C\n\n\n\n\n💧 Precipitación\n\n\n0 a 300\n\n\nmm/día\n\n\n\n\n💨 HR\n\n\n50 a 100\n\n\n%\n\n\n\n\n🌬️ Viento\n\n\n0 a 30\n\n\nm/s\n\n\n\n\n☀️ Radiación\n\n\n100 a 350\n\n\nW/m²"
+  },
+  {
+    "objectID": "index.html#los-rangos-pueden-variar-de-acuerdo-a",
+    "href": "index.html#los-rangos-pueden-variar-de-acuerdo-a",
+    "title": "Control de calidad de datos meteorológicos",
+    "section": "Los rangos pueden variar de acuerdo a:",
+    "text": "Los rangos pueden variar de acuerdo a:\n\nLa escala de medición; para escalas mensuales, el valor máximo de precipitación puede variar.\nLos rangos pueden cambiar dependiendo de la climatología de un sitio particular. No se pueden aplicar estos mismos criterios en zonas templadas."
+  },
+  {
+    "objectID": "index.html#varificamos-los-rangos",
+    "href": "index.html#varificamos-los-rangos",
+    "title": "Control de calidad de datos meteorológicos",
+    "section": "Varificamos los rangos",
+    "text": "Varificamos los rangos\n# Temperatura media (°C) - Rango tropical: 15 a 35\ndatos$T_media_fuera_rango &lt;- datos$T_media &lt; 15 | datos$T_media &gt; 35\ncat(\"T_media fuera de rango [15, 35]:\", sum(datos$T_media_fuera_rango, na.rm = TRUE), \"\\n\")\n\n# Temperatura máxima (°C) - Rango tropical: 20 a 45\ndatos$T_max_fuera_rango &lt;- datos$T_max &lt; 20 | datos$T_max &gt; 45\ncat(\"T_max fuera de rango [20, 45]:\", sum(datos$T_max_fuera_rango, na.rm = TRUE), \"\\n\")....."
+  },
+  {
+    "objectID": "index.html#verificamos-coherencia-entre-variables",
+    "href": "index.html#verificamos-coherencia-entre-variables",
+    "title": "Control de calidad de datos meteorológicos",
+    "section": "Verificamos coherencia entre variables",
+    "text": "Verificamos coherencia entre variables\n# T_max debe ser &gt;= T_min\ndatos$T_max_menor_T_min &lt;- datos$T_max &lt; datos$T_min\ncat(\"Registros con T_max &lt; T_min:\", sum(datos$T_max_menor_T_min, na.rm = TRUE), \"\\n\")\n\n# Opcional: Verificar que T_min no sea mayor que T_media\ndatos$T_min_mayor_T_media &lt;- datos$T_min &gt; datos$T_media\ncat(\"Registros con T_min &gt; T_media:\", sum(datos$T_min_mayor_T_media, na.rm = TRUE), \"\\n\")\n\n# Opcional: Verificar que T_max no sea menor que T_media\ndatos$T_max_menor_T_media &lt;- datos$T_max &lt; datos$T_media\ncat(\"Registros con T_max &lt; T_media:\", sum(datos$T_max_menor_T_media, na.rm = TRUE), \"\\n\")"
+  },
+  {
+    "objectID": "index.html#detectamos-outlier-con-iqr",
+    "href": "index.html#detectamos-outlier-con-iqr",
+    "title": "Control de calidad de datos meteorológicos",
+    "section": "Detectamos outlier con IQR",
+    "text": "Detectamos outlier con IQR\n¿Qué es un outlier?\nUn outlier (valor atípico) es un dato que se aleja significativamente del resto de las observaciones.\nEjemplo: Si la temperatura media en un mes tropical es 25°C y de repente aparece un registro de 45°C, ese es un outlier."
+  },
+  {
+    "objectID": "index.html#qué-es-el-iqr",
+    "href": "index.html#qué-es-el-iqr",
+    "title": "Control de calidad de datos meteorológicos",
+    "section": "¿Qué es el IQR?",
+    "text": "¿Qué es el IQR?\nIQR = Rango Intercuartil (Interquartile Range)\nEs la distancia entre el percentil 75 (Q3) y el percentil 25 (Q1):\nIQR = Q3 - Q1"
+  },
+  {
+    "objectID": "index.html#cómo-detectamos-outliers",
+    "href": "index.html#cómo-detectamos-outliers",
+    "title": "Control de calidad de datos meteorológicos",
+    "section": "¿Cómo detectamos outliers?",
+    "text": "¿Cómo detectamos outliers?\nUsamos la regla del IQR:\nLímite inferior = Q1 - k × IQR Límite superior = Q3 + k × IQR\nDonde k es un factor (nosotros usamos 3)\nUn outlier es cualquier valor fuera de estos límites."
+  },
+  {
+    "objectID": "index.html#qué-pasa-con-la-precipitación",
+    "href": "index.html#qué-pasa-con-la-precipitación",
+    "title": "Control de calidad de datos meteorológicos",
+    "section": "¿Qué pasa con la precipitación?",
+    "text": "¿Qué pasa con la precipitación?\nLa precipitación tiene un problema: no sigue una distribución normal (muchos días con cero y pocos días con mucha lluvia), por lo tanto, no aplicaremos detección de outliers con esta variable."
+  },
+  {
+    "objectID": "index.html#procedemos-a-detectar-los-outliers",
+    "href": "index.html#procedemos-a-detectar-los-outliers",
+    "title": "Control de calidad de datos meteorológicos",
+    "section": "Procedemos a detectar los outliers",
+    "text": "Procedemos a detectar los outliers\n# Calcular IQR para T_media\nQ1 &lt;- quantile(datos$T_media, 0.25, na.rm = TRUE)\nQ3 &lt;- quantile(datos$T_media, 0.75, na.rm = TRUE)\nIQR &lt;- Q3 - Q1\nlimite_inferior &lt;- Q1 - 3 * IQR\nlimite_superior &lt;- Q3 + 3 * IQR\ndatos$T_media_outlier &lt;- datos$T_media &lt; limite_inferior | datos$T_media &gt; limite_superior\ncat(\"T_media - Outliers:\", sum(datos$T_media_outlier, na.rm = TRUE), \"\\n\")\n\n# Calcular IQR para HR\nQ1 &lt;- quantile(datos$HR, 0.25, na.rm = TRUE)\nQ3 &lt;- quantile(datos$HR, 0.75, na.rm = TRUE)\nIQR &lt;- Q3 - Q1\nlimite_inferior &lt;- Q1 - 3 * IQR\nlimite_superior &lt;- Q3 + 3 * IQR\ndatos$HR_outlier &lt;- datos$HR &lt; limite_inferior | datos$HR &gt; limite_superior\ncat(\"HR - Outliers:\", sum(datos$HR_outlier, na.rm = TRUE), \"\\n\")..."
+  },
+  {
+    "objectID": "index.html#creamos-datos-limpios-reemplazamos-outliers-con-na",
+    "href": "index.html#creamos-datos-limpios-reemplazamos-outliers-con-na",
+    "title": "Control de calidad de datos meteorológicos",
+    "section": "Creamos datos limpios (reemplazamos outliers con NA)",
+    "text": "Creamos datos limpios (reemplazamos outliers con NA)\n# Copiar datos originales\ndatos_limpios &lt;- datos\n\n# Reemplazar outliers con NA\ndatos_limpios$T_media[datos_limpios$T_media_outlier == TRUE] &lt;- NA\ndatos_limpios$HR[datos_limpios$HR_outlier == TRUE] &lt;- NA\ndatos_limpios$Viento[datos_limpios$Viento_outlier == TRUE] &lt;- NA\ndatos_limpios$Radiacion[datos_limpios$Radiacion_outlier == TRUE] &lt;- NA...."
+  },
+  {
+    "objectID": "index.html#vemos-un-resumen-final",
+    "href": "index.html#vemos-un-resumen-final",
+    "title": "Control de calidad de datos meteorológicos",
+    "section": "Vemos un resumen final",
+    "text": "Vemos un resumen final\n# Totales de valores eliminados\ncat(\"\\nValores eliminados (convertidos a NA):\\n\")\ncat(\"- T_media:\", sum(is.na(datos_limpios$T_media) & !is.na(datos$T_media)), \"\\n\")\ncat(\"- T_max:\", sum(is.na(datos_limpios$T_max) & !is.na(datos$T_max)), \"\\n\")\ncat(\"- T_min:\", sum(is.na(datos_limpios$T_min) & !is.na(datos$T_min)), \"\\n\")\ncat(\"- Precipitacion:\", sum(is.na(datos_limpios$Precipitacion) & !is.na(datos$Precipitacion)), \"\\n\")\ncat(\"- HR:\", sum(is.na(datos_limpios$HR) & !is.na(datos$HR)), \"\\n\")\ncat(\"- Viento:\", sum(is.na(datos_limpios$Viento) & !is.na(datos$Viento)), \"\\n\")\ncat(\"- Radiacion:\", sum(is.na(datos_limpios$Radiacion) & !is.na(datos$Radiacion)), \"\\n\")..."
+  },
+  {
+    "objectID": "index.html#guardamos-los-resultados",
+    "href": "index.html#guardamos-los-resultados",
+    "title": "Control de calidad de datos meteorológicos",
+    "section": "Guardamos los resultados",
+    "text": "Guardamos los resultados\n# Guardar datos con flags de calidad\nwrite.xlsx(datos, \"datos_con_banderas_calidad.xlsx\")\n\n# Guardar datos limpios\nwrite.xlsx(datos_limpios, \"datos_limpios.xlsx\")"
+  }
+]
