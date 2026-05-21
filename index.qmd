@@ -1,0 +1,273 @@
+---
+title: "Control de calidad de datos meteorológicos"
+subtitle: ""
+author: "Prof. Miguel Silva" 
+format: 
+  revealjs:
+    theme: dark
+    transition: slide
+    slide-number: true
+    highlight-style: github
+    logo: "https://www.r-project.org/logo/Rlogo.png"
+    footer: ""
+    chalkboard: true
+---
+
+## ¿Por qué control de calidad?
+
+-   Los datos no son perfectos
+
+-   Prescencia de errores de medición, transmisión o procesamiento
+
+-   Datos faltantes o valores extremos no realistas
+
+------------------------------------------------------------------------
+
+## Consecuencias de no controlar calidad
+
+-   Estadísticas sesgadas (medias, máximos, tendencias)
+
+-   Gráficos engañosos
+
+-   Decisiones agrícolas incorrectas
+
+------------------------------------------------------------------------
+
+## Objetivo de la clase
+
+Aprender a:
+
+-   Identificar valores faltantes en series climáticas
+
+-   Verificar rangos plausibles por variable
+
+-   Detectar incoherencias entre variables
+
+-   Identificar outliers usando método IQR
+
+-   Generar un dataset limpio para análisis posteriores
+
+------------------------------------------------------------------------
+
+## Datos de partida {.center}
+
+Usaremos los datos descargados en la clase anterior:
+
+``` r
+# Cargar datos desde el archivo guardado
+datos <- read.xlsx("datos_limpios.xlsx")
+```
+Debemos garantizar que el archivo generado en la sesión práctica anterior
+se encuentre en la carpeta del directorio de trabajo.
+
+------------------------------------------------------------------------
+
+## Variables disponibles
+
+-   fecha: Día del año
+
+-   T_media, T_max, T_min: Temperaturas (°C)
+
+-   Precipitacion: Lluvia (mm/día)
+
+-   HR: Humedad relativa (%)
+
+-   Viento: Velocidad del viento (m/s)
+
+-   Radiacion: Radiación solar (W/m²)
+
+------------------------------------------------------------------------
+
+## Vemos la estructura de los datos {.center}
+
+``` r
+# Ver estructura de los datos
+head(datos)
+summary(datos)
+```
+
+------------------------------------------------------------------------
+
+## Verificamos los valores faltantes {.center}
+
+``` r
+# Contar cuántos NA hay por variable
+sum(is.na(datos$T_media))
+sum(is.na(datos$T_max))
+sum(is.na(datos$T_min))
+sum(is.na(datos$Precipitacion))
+sum(is.na(datos$HR))
+sum(is.na(datos$Viento))
+sum(is.na(datos$Radiacion))
+```
+
+------------------------------------------------------------------------
+
+## Verificamos los rangos plausibles
+
+
+Cada variable tiene límites físicos:
+
+<table style="width: 65%; border-collapse: collapse; margin: 20px auto; font-size: 18px;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid #ccc; padding: 12px; background: black;">Variable</th>
+      <th style="border: 1px solid #ccc; padding: 12px; background: black;">Rango</th>
+      <th style="border: 1px solid #ccc; padding: 12px; background: black;">Unidad</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td style="border: 1px solid #ccc; padding: 10px;">🌡️ T_media</td><td style="border: 1px solid #ccc; padding: 10px;">15 a 35</td><td style="border: 1px solid #ccc; padding: 10px;">°C</td></tr>
+    <tr><td style="border: 1px solid #ccc; padding: 10px;">🔥 T_max</td><td style="border: 1px solid #ccc; padding: 10px;">20 a 45</td><td style="border: 1px solid #ccc; padding: 10px;">°C</td></tr>
+    <tr><td style="border: 1px solid #ccc; padding: 10px;">❄️ T_min</td><td style="border: 1px solid #ccc; padding: 10px;">10 a 28</td><td style="border: 1px solid #ccc; padding: 10px;">°C</td></tr>
+    <tr><td style="border: 1px solid #ccc; padding: 10px;">💧 Precipitación</td><td style="border: 1px solid #ccc; padding: 10px;">0 a 300</td><td style="border: 1px solid #ccc; padding: 10px;">mm/día</td></tr>
+    <tr><td style="border: 1px solid #ccc; padding: 10px;">💨 HR</td><td style="border: 1px solid #ccc; padding: 10px;">50 a 100</td><td style="border: 1px solid #ccc; padding: 10px;">%</td></tr>
+    <tr><td style="border: 1px solid #ccc; padding: 10px;">🌬️ Viento</td><td style="border: 1px solid #ccc; padding: 10px;">0 a 30</td><td style="border: 1px solid #ccc; padding: 10px;">m/s</td></tr>
+    <tr><td style="border: 1px solid #ccc; padding: 10px;">☀️ Radiación</td><td style="border: 1px solid #ccc; padding: 10px;">100 a 350</td><td style="border: 1px solid #ccc; padding: 10px;">W/m²</td></tr>
+  </tbody>
+</table>
+
+## Los rangos pueden variar de acuerdo a: {.center}
+
+- La escala de medición; para escalas mensuales, el valor máximo de precipitación
+puede variar. 
+
+- Los rangos pueden cambiar dependiendo de la climatología de un sitio particular. No se pueden aplicar estos mismos criterios en zonas templadas.
+
+
+------------------------------------------------------------------------
+
+## Varificamos los rangos {.center}
+
+``` r
+# Temperatura media (°C) - Rango tropical: 15 a 35
+datos$T_media_fuera_rango <- datos$T_media < 15 | datos$T_media > 35
+cat("T_media fuera de rango [15, 35]:", sum(datos$T_media_fuera_rango, na.rm = TRUE), "\n")
+
+# Temperatura máxima (°C) - Rango tropical: 20 a 45
+datos$T_max_fuera_rango <- datos$T_max < 20 | datos$T_max > 45
+cat("T_max fuera de rango [20, 45]:", sum(datos$T_max_fuera_rango, na.rm = TRUE), "\n").....
+```
+
+------------------------------------------------------------------------
+
+## Verificamos coherencia entre variables {.center}
+
+``` r
+# T_max debe ser >= T_min
+datos$T_max_menor_T_min <- datos$T_max < datos$T_min
+cat("Registros con T_max < T_min:", sum(datos$T_max_menor_T_min, na.rm = TRUE), "\n")
+
+# Opcional: Verificar que T_min no sea mayor que T_media
+datos$T_min_mayor_T_media <- datos$T_min > datos$T_media
+cat("Registros con T_min > T_media:", sum(datos$T_min_mayor_T_media, na.rm = TRUE), "\n")
+
+# Opcional: Verificar que T_max no sea menor que T_media
+datos$T_max_menor_T_media <- datos$T_max < datos$T_media
+cat("Registros con T_max < T_media:", sum(datos$T_max_menor_T_media, na.rm = TRUE), "\n")
+```
+
+------------------------------------------------------------------------
+
+## Detectamos outlier con IQR {.center}
+
+**¿Qué es un outlier?**
+
+Un outlier (valor atípico) es un dato que se aleja significativamente del resto de las observaciones.
+
+Ejemplo: Si la temperatura media en un mes tropical es 25°C y de repente aparece un registro de 45°C, ese es un outlier.
+
+------------------------------------------------------------------------
+
+## ¿Qué es el IQR? {.center} 
+
+IQR = Rango Intercuartil (Interquartile Range)
+
+Es la distancia entre el percentil 75 (Q3) y el percentil 25 (Q1):
+
+IQR = Q3 - Q1
+
+------------------------------------------------------------------------
+
+## ¿Cómo detectamos outliers? {.center}
+
+Usamos la regla del IQR:
+
+Límite inferior = Q1 - k × IQR Límite superior = Q3 + k × IQR
+
+Donde k es un factor (nosotros usamos 3)
+
+Un outlier es cualquier valor fuera de estos límites.
+
+------------------------------------------------------------------------
+
+## ¿Qué pasa con la precipitación? {.center}
+
+La precipitación tiene un problema: no sigue una distribución normal (muchos días con cero y pocos días con mucha lluvia), por lo tanto, no aplicaremos detección de outliers con esta variable.
+
+------------------------------------------------------------------------
+
+## Procedemos a detectar los outliers
+
+``` r
+# Calcular IQR para T_media
+Q1 <- quantile(datos$T_media, 0.25, na.rm = TRUE)
+Q3 <- quantile(datos$T_media, 0.75, na.rm = TRUE)
+IQR <- Q3 - Q1
+limite_inferior <- Q1 - 3 * IQR
+limite_superior <- Q3 + 3 * IQR
+datos$T_media_outlier <- datos$T_media < limite_inferior | datos$T_media > limite_superior
+cat("T_media - Outliers:", sum(datos$T_media_outlier, na.rm = TRUE), "\n")
+
+# Calcular IQR para HR
+Q1 <- quantile(datos$HR, 0.25, na.rm = TRUE)
+Q3 <- quantile(datos$HR, 0.75, na.rm = TRUE)
+IQR <- Q3 - Q1
+limite_inferior <- Q1 - 3 * IQR
+limite_superior <- Q3 + 3 * IQR
+datos$HR_outlier <- datos$HR < limite_inferior | datos$HR > limite_superior
+cat("HR - Outliers:", sum(datos$HR_outlier, na.rm = TRUE), "\n")...
+```
+
+------------------------------------------------------------------------
+
+## Creamos datos limpios (reemplazamos outliers con NA)
+
+``` r
+# Copiar datos originales
+datos_limpios <- datos
+
+# Reemplazar outliers con NA
+datos_limpios$T_media[datos_limpios$T_media_outlier == TRUE] <- NA
+datos_limpios$HR[datos_limpios$HR_outlier == TRUE] <- NA
+datos_limpios$Viento[datos_limpios$Viento_outlier == TRUE] <- NA
+datos_limpios$Radiacion[datos_limpios$Radiacion_outlier == TRUE] <- NA....
+```
+
+------------------------------------------------------------------------
+
+## Vemos un resumen final
+
+``` r
+# Totales de valores eliminados
+cat("\nValores eliminados (convertidos a NA):\n")
+cat("- T_media:", sum(is.na(datos_limpios$T_media) & !is.na(datos$T_media)), "\n")
+cat("- T_max:", sum(is.na(datos_limpios$T_max) & !is.na(datos$T_max)), "\n")
+cat("- T_min:", sum(is.na(datos_limpios$T_min) & !is.na(datos$T_min)), "\n")
+cat("- Precipitacion:", sum(is.na(datos_limpios$Precipitacion) & !is.na(datos$Precipitacion)), "\n")
+cat("- HR:", sum(is.na(datos_limpios$HR) & !is.na(datos$HR)), "\n")
+cat("- Viento:", sum(is.na(datos_limpios$Viento) & !is.na(datos$Viento)), "\n")
+cat("- Radiacion:", sum(is.na(datos_limpios$Radiacion) & !is.na(datos$Radiacion)), "\n")...
+```
+
+------------------------------------------------------------------------
+
+## Guardamos los resultados {.center}
+
+``` r
+# Guardar datos con flags de calidad
+write.xlsx(datos, "datos_con_banderas_calidad.xlsx")
+
+# Guardar datos limpios
+write.xlsx(datos_limpios, "datos_limpios.xlsx")
+```
