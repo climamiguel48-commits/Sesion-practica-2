@@ -1,6 +1,6 @@
 ---
 title: "Control de calidad de datos meteorológicos"
-subtitle: ""
+subtitle: "Sesión practica 2"
 author: "Prof. Miguel Silva"  
 format: 
   revealjs:
