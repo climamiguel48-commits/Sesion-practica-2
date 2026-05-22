@@ -101,6 +101,60 @@ sum(is.na(datos$Viento))
 sum(is.na(datos$Radiacion))
 ```
 
+---
+
+## ¿Cuál es la cantidad máxima de datos faltantes tolerables? {.center}
+
+---
+
+## {.center}
+
+Para la mayoría de los análisis climáticos estándar la regla general más aceptada es:
+
+- **Tolerable:** Hasta 10-20% de datos faltantes en un período de tiempo dado. 
+
+- **Crítico:** Si superas el 30-40% de datos faltantes, cualquier resultado será altamente sesgado o inválido para la mayoría de los métodos.
+
+---
+
+## Factores clave que definen el umbral
+
+**Escala temporal del análisis** 
+
+**Datos diarios:** Muy sensibles. Un solo día faltante puede impedir calcular un récord o un evento extremo. Para series diarias continuas, se suele exigir 0% faltantes. 
+
+**Datos mensuales:** Para calcular el promedio mensual, se suele aceptar un mínimo de días válidos. El estándar es:
+
+- 20 días válidos por mes (≈ 66% de datos presentes) es un umbral mínimo común.
+
+- Muchos climatólogos exigen 25-28 días (≈ 90% presentes) para estimaciones robustas.
+
+---
+
+## {.center}
+
+**Datos anuales o estacionales:** Se puede tolerar un mes faltante siempre que no sea un mes climáticamente extremo. Un año con más de 1-2 meses inválidos (según la variable) suele descartarse.
+
+---
+
+## La variable climática {.center}
+
+**Precipitación:** Muy variable (espacial y temporalmente). Pequeños faltantes generan grandes errores en totales. Umbral más estricto: se recomienda < 10% faltantes en un período.
+
+**Temperatura (media, máx, mín):** más estable y con correlación espacial. A veces se tolera hasta 20-25% faltantes en un mes, si el resto de los días son coherentes.
+
+**Humedad, viento, radiación:** Depende, pero suelen ser intermedios. Se recomienda < 15% faltantes.
+
+---
+
+## ¿Se pueden estimar datos faltantes? {.center}
+
+Existen varios métodos para rellenar datos faltantes, pero hay que aplicarlos con 
+cuidado, pues la eficiencia del método dependerá de la naturaleza de la variable.
+
+
+Los veremos más adelante.. 🤔 🧠 
+
 ------------------------------------------------------------------------
 
 ## Verificamos los rangos plausibles

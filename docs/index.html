@@ -269,6 +269,42 @@ Prof.&nbsp;Miguel Silva
 <span id="cb3-7"><a></a><span class="fu">sum</span>(<span class="fu">is.na</span>(datos<span class="sc">$</span>Viento))</span>
 <span id="cb3-8"><a></a><span class="fu">sum</span>(<span class="fu">is.na</span>(datos<span class="sc">$</span>Radiacion))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
+<section id="cuál-es-la-cantidad-máxima-de-datos-faltantes-tolerables" class="slide level2 center">
+<h2>¿Cuál es la cantidad máxima de datos faltantes tolerables?</h2>
+</section>
+<section id="section" class="slide level2 center">
+<h2></h2>
+<p>Para la mayoría de los análisis climáticos estándar la regla general más aceptada es:</p>
+<ul>
+<li><p><strong>Tolerable:</strong> Hasta 10-20% de datos faltantes en un período de tiempo dado.</p></li>
+<li><p><strong>Crítico:</strong> Si superas el 30-40% de datos faltantes, cualquier resultado será altamente sesgado o inválido para la mayoría de los métodos.</p></li>
+</ul>
+</section>
+<section id="factores-clave-que-definen-el-umbral" class="slide level2">
+<h2>Factores clave que definen el umbral</h2>
+<p><strong>Escala temporal del análisis</strong></p>
+<p><strong>Datos diarios:</strong> Muy sensibles. Un solo día faltante puede impedir calcular un récord o un evento extremo. Para series diarias continuas, se suele exigir 0% faltantes.</p>
+<p><strong>Datos mensuales:</strong> Para calcular el promedio mensual, se suele aceptar un mínimo de días válidos. El estándar es:</p>
+<ul>
+<li><p>20 días válidos por mes (≈ 66% de datos presentes) es un umbral mínimo común.</p></li>
+<li><p>Muchos climatólogos exigen 25-28 días (≈ 90% presentes) para estimaciones robustas.</p></li>
+</ul>
+</section>
+<section id="section-1" class="slide level2 center">
+<h2></h2>
+<p><strong>Datos anuales o estacionales:</strong> Se puede tolerar un mes faltante siempre que no sea un mes climáticamente extremo. Un año con más de 1-2 meses inválidos (según la variable) suele descartarse.</p>
+</section>
+<section id="la-variable-climática" class="slide level2 center">
+<h2>La variable climática</h2>
+<p><strong>Precipitación:</strong> Muy variable (espacial y temporalmente). Pequeños faltantes generan grandes errores en totales. Umbral más estricto: se recomienda &lt; 10% faltantes en un período.</p>
+<p><strong>Temperatura (media, máx, mín):</strong> más estable y con correlación espacial. A veces se tolera hasta 20-25% faltantes en un mes, si el resto de los días son coherentes.</p>
+<p><strong>Humedad, viento, radiación:</strong> Depende, pero suelen ser intermedios. Se recomienda &lt; 15% faltantes.</p>
+</section>
+<section id="se-pueden-estimar-datos-faltantes" class="slide level2 center">
+<h2>¿Se pueden estimar datos faltantes?</h2>
+<p>Existen varios métodos para rellenar datos faltantes, pero hay que aplicarlos con cuidado, pues la eficiencia del método dependerá de la naturaleza de la variable.</p>
+<p>Los veremos más adelante.. 🤔 🧠</p>
+</section>
 <section id="verificamos-los-rangos-plausibles" class="slide level2">
 <h2>Verificamos los rangos plausibles</h2>
 <p>Cada variable tiene límites físicos:</p>
