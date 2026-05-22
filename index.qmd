@@ -271,3 +271,23 @@ write.xlsx(datos, "datos_con_banderas_calidad.xlsx")
 # Guardar datos limpios
 write.xlsx(datos_limpios, "datos_limpios.xlsx")
 ```
+---
+
+## Ahora es tu turno: 
+
+1.Usa el script para aplicar control de calidad a tus datos descargados 
+
+2.Exporta los datos con calidad a tu directorio de trabajo
+
+3.Realice un informe de una página donde muestre los resultados del 
+control de calidad y discuta. Responda la siguiente pregunta: ¿Cuáles limitaciones tendrían los principios de control aplicados en esta práctica? Discuta su respuesta 
+
+4.Cargue este informe en el apartado correspondiente del campus virtual 
+
+
+
+
+
+
+
+

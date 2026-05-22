@@ -131,5 +131,12 @@
     "title": "Control de calidad de datos meteorológicos",
     "section": "Guardamos los resultados",
     "text": "Guardamos los resultados\n# Guardar datos con flags de calidad\nwrite.xlsx(datos, \"datos_con_banderas_calidad.xlsx\")\n\n# Guardar datos limpios\nwrite.xlsx(datos_limpios, \"datos_limpios.xlsx\")"
+  },
+  {
+    "objectID": "index.html#ahora-es-tu-turno",
+    "href": "index.html#ahora-es-tu-turno",
+    "title": "Control de calidad de datos meteorológicos",
+    "section": "Ahora es tu turno:",
+    "text": "Ahora es tu turno:\n1.Usa el script para aplicar control de calidad a tus datos descargados\n2.Exporta los datos con calidad a tu directorio de trabajo\n3.Realice un informe de una página donde muestre los resultados del control de calidad y discuta. Responda la siguiente pregunta: ¿Cuáles limitaciones tendrían los principios de control aplicados en esta práctica? Discuta su respuesta\n4.Cargue este informe en el apartado correspondiente del campus virtual"
   }
 ]
